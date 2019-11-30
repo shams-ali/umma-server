@@ -4,13 +4,8 @@
     "rules": {
       "prettier/prettier": "error",
       "no-unused-vars": "warn",
-      "no-console": "off",
-      "func-names": "off",
-      "object-shorthand": "off",
-      "class-methods-use-this": "off",
-      "jsx-a11y/anchor-is-valid": "off",
-      "jsx-a11y/anchor-has-content": "off",
-      "jsx-a11y/control-has-associated-label": "off"
+      // "func-names": "off",
+      "no-console": ["error", { "allow": ["warn", "error", "info"] }]
     },
     "env": {
       "browser": true,
