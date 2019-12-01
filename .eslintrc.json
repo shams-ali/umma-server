@@ -4,7 +4,6 @@
     "rules": {
       "prettier/prettier": "error",
       "no-unused-vars": "warn",
-      // "func-names": "off",
       "no-console": ["error", { "allow": ["warn", "error", "info"] }]
     },
     "env": {
