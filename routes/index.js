@@ -1,18 +1,17 @@
 const express = require('express');
 
 const router = express.Router();
+const dotenv = require('dotenv');
+dotenv.config();
 
 const { google } = require('googleapis');
-const keys = require('../gkeys.json');
+const { CLIENT_EMAIL, PRIVATE_KEY } = process.env;
 
 /* GET data from Google Sheets API */
 router.get('/umma-server/getData', (req, res) => {
-  const client = new google.auth.JWT(
-    keys.client_email,
-    null,
-    keys.private_key,
-    ['https://www.googleapis.com/auth/spreadsheets.readonly']
-  );
+  const client = new google.auth.JWT(CLIENT_EMAIL, null, PRIVATE_KEY, [
+    'https://www.googleapis.com/auth/spreadsheets.readonly'
+  ]);
 
   async function gsGet(clientAuth) {
     const gsApi = google.sheets({
@@ -25,7 +24,9 @@ router.get('/umma-server/getData', (req, res) => {
       ranges: ['Projects!A4:I', 'Events!A4:G']
     };
 
-    const data = await gsApi.spreadsheets.values.batchGet(options);
+    const data = await gsApi.spreadsheets.values
+      .batchGet(options)
+      .catch(err => console.log(err));
 
     const projects = data.data.valueRanges[0].values;
     const events = data.data.valueRanges[1].values;
@@ -43,7 +44,9 @@ router.get('/umma-server/getData', (req, res) => {
       console.error(err, tokens);
       throw err;
     } else {
-      gsGet(client).then(data => res.json(data));
+      gsGet(client)
+        .then(data => res.json(data))
+        .catch(err => console.log(err));
     }
   });
 });
