@@ -5,7 +5,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const { google } = require('googleapis');
-const { CLIENT_EMAIL, PRIVATE_KEY } = process.env;
+let { CLIENT_EMAIL, PRIVATE_KEY } = process.env;
+
+PRIVATE_KEY = PRIVATE_KEY.replace(new RegExp('\\\\n', 'g'), '\n');
 
 /* GET data from Google Sheets API */
 router.get('/umma-server/getData', (req, res) => {
@@ -26,7 +28,7 @@ router.get('/umma-server/getData', (req, res) => {
 
     const data = await gsApi.spreadsheets.values
       .batchGet(options)
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
 
     const projects = data.data.valueRanges[0].values;
     const events = data.data.valueRanges[1].values;
@@ -46,7 +48,7 @@ router.get('/umma-server/getData', (req, res) => {
     } else {
       gsGet(client)
         .then(data => res.json(data))
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     }
   });
 });
